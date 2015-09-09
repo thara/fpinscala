@@ -6,8 +6,13 @@ object MyModule {
     else n
 
   private def formatAbs(x: Int) = {
-    val msg = "The absoulte value of %d id %d"
+    val msg = "The absoulte value of %d is %d."
     msg.format(x, abs(x))
+  }
+
+  def formatResult(name: String, n: Int, f: Int => Int) = {
+    val msg = "The %s of %d is %d."
+    msg.format(name, n, f(n))
   }
 
   def main(args: Array[String]): Unit =
@@ -17,7 +22,7 @@ object MyModule {
     @annotation.tailrec
     def go(n: Int, acc: Int): Int =
       if (n <= 0) acc
-      else go(n-1, n*acc)
+      else go(n - 1, n * acc)
 
     go(n, 1)
   }
@@ -26,8 +31,43 @@ object MyModule {
   def fib(n: Int): Int = {
     def loop(a: Int, b: Int, i: Int): Int =
       if (i == n) a
-      else loop(b, a+b, i+1)
+      else loop(b, a + b, i + 1)
 
     loop(0, 1, 0)
   }
+
+  def findFirst[A](as: Array[A], p: A => Boolean): Int = {
+    @annotation.tailrec
+    def loop(n: Int): Int =
+      if (n >= as.length) -1
+      else if (p(as(n))) n
+      else loop(n + 1)
+
+    loop(0)
+  }
+
+  // EXERCISE 2.2
+  def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
+    @annotation.tailrec
+    def loop(n: Int): Boolean =
+      if (as.length <= n + 1) true
+      else if (ordered(as(n), as(n+1))) loop(n+1)
+      else false
+    loop(0)
+  }
+
+  def partial[A, B, C](a: A, f: (A, B) => C): B => C =
+    (b: B) => f(a, b)
+
+  // EXERCISE 2.3
+  def curry[A, B, C](f: (A, B) => C): A => (B => C) =
+    (a: A) => (b: B) => f(a, b)
+
+  // EXERCISE 2.4
+  def uncurry[A, B, C](f: A => B => C): (A, B) => C =
+    (a: A, b: B) => f(a)(b)
+
+  // EXERCISE 2.5
+  def compose[A, B, C](f: B => C, g: A => B): A => C =
+    (a: A) => f(g(a))
 }
