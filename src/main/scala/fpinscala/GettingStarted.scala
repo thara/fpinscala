@@ -16,7 +16,10 @@ object MyModule {
   }
 
   def main(args: Array[String]): Unit =
-    println(formatAbs(-42))
+    println(formatResult("absolute value", -42, abs))
+    println(formatResult("factorial", 15, factorial))
+    (0 to 4).foreach(
+      n => println(formatResult("Fibonacci number", n, fib)))
 
   def factorial(n: Int): Int = {
     @annotation.tailrec
@@ -29,11 +32,11 @@ object MyModule {
 
   // EXERCISE 2.1
   def fib(n: Int): Int = {
-    def loop(a: Int, b: Int, i: Int): Int =
-      if (i == n) a
-      else loop(b, a + b, i + 1)
-
-    loop(0, 1, 0)
+    @annotation.tailrec
+    def loop(n: Int, prev: Int, current: Int): Int =
+      if (n == 0) current
+      else loop(n - 1, current, prev + current)
+    loop(n, 0, 1)
   }
 
   def findFirst[A](as: Array[A], p: A => Boolean): Int = {
