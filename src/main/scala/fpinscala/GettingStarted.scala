@@ -20,6 +20,10 @@ object MyModule {
     println(formatResult("factorial", 15, factorial))
     (0 to 4).foreach(
       n => println(formatResult("Fibonacci number", n, fib)))
+    println(isSorted(Array(1,3,2), (a: Int, b: Int) => a < b))
+    println(isSorted(Array(1,2,3), (a: Int, b: Int) => a < b))
+    println(isSorted2(Array(1,2,3), (a: Int, b: Int) => a < b))
+    println(isSorted2(Array(1,3,2), (a: Int, b: Int) => a < b))
 
   def factorial(n: Int): Int = {
     @annotation.tailrec
@@ -53,10 +57,18 @@ object MyModule {
   def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
     @annotation.tailrec
     def loop(n: Int): Boolean =
-      if (as.length <= n + 1) true
+      if (as.length <= n+1) true
       else if (ordered(as(n), as(n+1))) loop(n+1)
       else false
     loop(0)
+  }
+
+  def isSorted2[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
+    @annotation.tailrec
+    def loop(n: Int): Boolean =
+      if (as.length <= n) true
+      else ordered(as(n-1), as(n)) && loop(n+1)
+    loop(1)
   }
 
   def partial[A, B, C](a: A, f: (A, B) => C): B => C =
